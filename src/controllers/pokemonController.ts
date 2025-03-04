@@ -19,13 +19,46 @@ export const getAll = async (req: Request, res: Response) => {
 };
 
 export const getById = async (req: Request, res: Response) => {
-  // logic to get pokemon by id
+  try {
+    const { id } = req.params;
+    const pokemon = await Pokemon.findById(id);
+
+    if (!pokemon) {
+      return res.status(404).json({ error: "Pokémon not found" });
+    }
+
+    return res.status(200).json(pokemon);
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
 };
 
 export const update = async (req: Request, res: Response) => {
-  // logic to update a pokemon by id
+  try {
+    const { id } = req.params;
+    const updatedPokemon = await Pokemon.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+
+    if (!updatedPokemon) {
+      return res.status(404).json({ error: "Pokémon not found" });
+    }
+
+    return res.status(200).json(updatedPokemon);
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
 };
 
 export const remove = async (req: Request, res: Response) => {
-  // logic to delete a pokemon by id
+  try {
+    const { id } = req.params;
+    const deletedPokemon = await Pokemon.findByIdAndDelete(id);
+
+    if (!deletedPokemon) {
+      return res.status(404).json({ error: "Pokémon not found" });
+    }
+
+    return res.status(200).json({ message: "Pokémon deleted successfully" });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
 };
