@@ -1,15 +1,15 @@
 import Pokemon from "../models/Pokemon";
 
 const energytypes = [
-  "colorless",
-  "grass",
-  "fire",
-  "water",
-  "lightning",
-  "psychic",
-  "fighting",
-  "darkness",
-  "metal",
+  "Colorless",
+  "Grass",
+  "Fire",
+  "Water",
+  "Lightning",
+  "Psychic",
+  "Fighting",
+  "Darkness",
+  "Metal",
 ];
 
 export const mapJsonToPokemonCard = async (jsonData: any) => {

@@ -16,7 +16,7 @@ export const getById = async (req: Request, res: Response) => {
     const pokemon = await Pokemon.findById(id);
 
     if (!pokemon) {
-      return res.status(404).json({ error: "Pokémon not found" });
+      return res.status(404).json({ error: "Pokémon não encontrado" });
     }
 
     return res.status(200).json(pokemon);
@@ -34,7 +34,7 @@ export const update = async (req: Request, res: Response) => {
     });
 
     if (!updatedPokemon) {
-      return res.status(404).json({ error: "Pokémon not found" });
+      return res.status(404).json({ error: "Pokémon não encontrado" });
     }
 
     return res.status(200).json(updatedPokemon);
@@ -49,10 +49,10 @@ export const remove = async (req: Request, res: Response) => {
     const deletedPokemon = await Pokemon.findByIdAndDelete(id);
 
     if (!deletedPokemon) {
-      return res.status(404).json({ error: "Pokémon not found" });
+      return res.status(404).json({ error: "Pokémon não encontrado" });
     }
 
-    return res.status(200).json({ message: "Pokémon deleted successfully" });
+    return res.status(200).json({ message: "Pokémon deletado com sucesso" });
   } catch (error: any) {
     return res.status(400).json({ error: error.message });
   }
@@ -75,17 +75,10 @@ export const cardUpload = async (req: Request, res: Response) => {
     if (!pokemonCard) {
       return res.status(400).json({ error: "Falha ao mapear JSON para carta" });
     }
-
-    const isDuplicate = await checkDuplicateCard(pokemonCard.number);
-    if (isDuplicate) {
-      return res
-        .status(400)
-        .json({ error: "Já existe um card com esse número." });
-    }
-
+    
     await pokemonCard.save();
     deleteFile(req.file.path);
-    return res.json(responseJson);
+    return res.json(pokemonCard);
     
   } catch (error) {
     return res
@@ -101,11 +94,6 @@ const processCardData = async (filename: string): Promise<string | null> => {
     return result;
   }
   return null;
-};
-
-const checkDuplicateCard = async (number: string): Promise<boolean> => {
-  const existingCard = await Pokemon.findOne({ number });
-  return !!existingCard;
 };
 
 export const deleteFile = (filePath: string): void => {
