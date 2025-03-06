@@ -4,16 +4,6 @@ import { CardDataAnalyzer } from "../services/cardDataService";
 import { formatJson } from "../utils/formatJson";
 import { mapJsonToPokemonCard } from "../services/pokemonService";
 
-export const create = async (req: Request, res: Response) => {
-  try {
-    const pokemon = new Pokemon(req.body);
-    await pokemon.save();
-    return res.status(201).json(pokemon);
-  } catch (error: any) {
-    return res.status(400).json({ error: error.message });
-  }
-};
-
 export const getAll = async (req: Request, res: Response) => {
   let pokemons = await Pokemon.find();
   res.json(pokemons);
@@ -67,7 +57,7 @@ export const remove = async (req: Request, res: Response) => {
   }
 };
 
-export const uploadCard = async (req: Request, res: Response) => {
+export const cardUpload = async (req: Request, res: Response) => {
   if (!req.file) {
     return res.status(400).json({ error: "Nenhum arquivo enviado" });
   }
@@ -82,5 +72,15 @@ export const uploadCard = async (req: Request, res: Response) => {
     res
       .status(500)
       .json({ error: "Erro ao processar a imagem", details: error });
+  }
+};
+
+export const create = async (req: Request, res: Response) => {
+  try {
+    const pokemon = new Pokemon(req.body);
+    await pokemon.save();
+    return res.status(201).json(pokemon);
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
   }
 };

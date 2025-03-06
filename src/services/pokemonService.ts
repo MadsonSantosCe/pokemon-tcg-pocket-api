@@ -27,7 +27,7 @@ export const mapJsonToPokemonCard = async (jsonData: any) => {
             name: data.ability.name,
             descrition: data.ability.description,
           }
-        : "",
+        : null,
       attacks: data.attacks.map((attack: any) => ({
         name: attack.name,
         energyCost: attack.energyCost.map((cost: any) => {
