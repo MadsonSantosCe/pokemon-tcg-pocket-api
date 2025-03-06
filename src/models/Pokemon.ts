@@ -24,13 +24,18 @@ interface Weakness {
     bonus: number;
 }
 
+interface Ability {
+    name: string;
+    descrition: number;
+}
+
 interface PokemonCard extends Document {
     name: string;
     stage: string;
     evolvesFrom: string;
     hp: number;
     type: string;
-    hability?: string;
+    ability?: string;
     attacks: Attack[];
     weakness: Weakness;
     retreatCost: number;
@@ -62,13 +67,18 @@ const WeaknessSchema = new Schema<Weakness>({
     bonus: { type: Number, required: true }
 }, { _id: false });
 
+const AbilitySchema = new Schema<Ability>({
+    name: { type: String},
+    descrition: { type: Number}
+}, { _id: false });
+
 const PokemonCardSchema = new Schema<PokemonCard>({
     name: { type: String, required: true },
     stage: { type: String, required: true },
     evolvesFrom: { type: String, default: "" },
     hp: { type: Number, required: true },
     type: { type: String, required: true },
-    hability: { type: String, default: "" },
+    ability: { type: AbilitySchema, default: null },
     attacks: { type: [AttackSchema], default: [] },
     weakness: { type: WeaknessSchema, required: true },
     retreatCost: { type: Number, default: null },
