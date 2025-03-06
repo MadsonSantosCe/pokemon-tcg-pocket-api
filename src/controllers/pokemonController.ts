@@ -62,3 +62,11 @@ export const remove = async (req: Request, res: Response) => {
     return res.status(400).json({ error: error.message });
   }
 };
+
+export const uploadCard = async (req: Request, res: Response) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "Nenhum arquivo enviado" });
+  }
+
+  res.status(200).json({ message: "File uploaded successfully" });
+}
