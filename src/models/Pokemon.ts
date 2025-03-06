@@ -78,7 +78,7 @@ const PokemonCardSchema = new Schema<PokemonCard>({
     evolvesFrom: { type: String, default: "" },
     hp: { type: Number, required: true },
     type: { type: String, required: true },
-    ability: { type: AbilitySchema, default: null },
+    ability: { type: AbilitySchema, default: "" },
     attacks: { type: [AttackSchema], default: [] },
     weakness: { type: WeaknessSchema, required: true },
     retreatCost: { type: Number, default: null },
