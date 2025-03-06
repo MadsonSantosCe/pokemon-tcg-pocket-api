@@ -3,6 +3,7 @@ import Pokemon from "../models/Pokemon";
 import { CardDataAnalyzer } from "../services/cardDataService";
 import { formatJson } from "../utils/formatJson";
 import { mapJsonToPokemonCard } from "../services/pokemonService";
+import fs from "fs";
 
 export const getAll = async (req: Request, res: Response) => {
   let pokemons = await Pokemon.find();
@@ -61,26 +62,56 @@ export const cardUpload = async (req: Request, res: Response) => {
   if (!req.file) {
     return res.status(400).json({ error: "Nenhum arquivo enviado" });
   }
+
   try {
-    const responseText = await CardDataAnalyzer(req.file?.filename || "");
-    if (typeof responseText === "string") {
-      let responseJson = formatJson(responseText);
-      await mapJsonToPokemonCard(responseJson);
-      return res.json(responseJson);
+    const responseText = await processCardData(req.file.filename);
+    if (!responseText) {
+      return res.status(400).json({ error: "Erro ao processar o arquivo" });
     }
+
+    const responseJson = formatJson(responseText);
+    const pokemonCard = await mapJsonToPokemonCard(responseJson);
+
+    if (!pokemonCard) {
+      return res.status(400).json({ error: "Falha ao mapear JSON para carta" });
+    }
+
+    const isDuplicate = await checkDuplicateCard(pokemonCard.number);
+    if (isDuplicate) {
+      return res
+        .status(400)
+        .json({ error: "Já existe um card com esse número." });
+    }
+
+    await pokemonCard.save();
+    deleteFile(req.file.path);
+    return res.json(responseJson);
+    
   } catch (error) {
-    res
+    return res
       .status(500)
       .json({ error: "Erro ao processar a imagem", details: error });
   }
 };
 
-export const create = async (req: Request, res: Response) => {
-  try {
-    const pokemon = new Pokemon(req.body);
-    await pokemon.save();
-    return res.status(201).json(pokemon);
-  } catch (error: any) {
-    return res.status(400).json({ error: error.message });
+const processCardData = async (filename: string): Promise<string | null> => {
+  if (!filename) return null;
+  const result = await CardDataAnalyzer(filename);
+  if (typeof result === "string") {
+    return result;
   }
+  return null;
+};
+
+const checkDuplicateCard = async (number: string): Promise<boolean> => {
+  const existingCard = await Pokemon.findOne({ number });
+  return !!existingCard;
+};
+
+export const deleteFile = (filePath: string): void => {
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error("Erro ao excluir o arquivo:", err);
+    }
+  });
 };

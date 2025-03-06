@@ -82,7 +82,7 @@ const PokemonCardSchema = new Schema<PokemonCard>({
     attacks: { type: [AttackSchema], default: [] },
     weakness: { type: WeaknessSchema, required: true },
     retreatCost: { type: Number, default: null },
-    number: { type: String, required: true, unique: true },
+    number: { type: String, default: ""},
     exRule: { type: String, default: "" }
 });
 

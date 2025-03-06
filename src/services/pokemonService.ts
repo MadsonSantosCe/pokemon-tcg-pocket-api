@@ -1,15 +1,15 @@
 import Pokemon from "../models/Pokemon";
 
 const energytypes = [
-  "Colorless",
-  "Grass",
-  "Fire",
-  "Water",
-  "Lightning",
-  "Psychic",
-  "Fighting",
-  "Darkness",
-  "Metal",
+  "colorless",
+  "grass",
+  "fire",
+  "water",
+  "lightning",
+  "psychic",
+  "fighting",
+  "darkness",
+  "metal",
 ];
 
 export const mapJsonToPokemonCard = async (jsonData: any) => {
@@ -51,8 +51,7 @@ export const mapJsonToPokemonCard = async (jsonData: any) => {
       exRule: data.exRule || "",
     });
 
-    await pokemonCard.save();
-    console.log("PokemonCard salvo com sucesso!");
+    return pokemonCard
   } catch (error) {
     console.error("Erro ao criar a entidade PokemonCard:", error);
   }
