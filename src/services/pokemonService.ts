@@ -25,7 +25,7 @@ export const mapJsonToPokemonCard = async (jsonData: any) => {
       ability: data.ability
         ? {
             name: data.ability.name,
-            descrition: data.ability.description,
+            description: data.ability.description,
           }
         : null,
       attacks: data.attacks.map((attack: any) => ({
@@ -46,7 +46,7 @@ export const mapJsonToPokemonCard = async (jsonData: any) => {
         type: data.weakness.type,
         bonus: parseInt(data.weakness.bonus, 10),
       },
-      retreatCost: parseInt(data.retreatCost, 10),
+      retreatCost: parseInt(data.retreatCost, 10) || "",
       number: data.number,
       exRule: data.exRule || "",
     });

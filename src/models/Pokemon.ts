@@ -26,7 +26,7 @@ interface Weakness {
 
 interface Ability {
     name: string;
-    descrition: number;
+    description: number;
 }
 
 interface PokemonCard extends Document {
@@ -69,7 +69,7 @@ const WeaknessSchema = new Schema<Weakness>({
 
 const AbilitySchema = new Schema<Ability>({
     name: { type: String},
-    descrition: { type: Number}
+    description: { type: Number}
 }, { _id: false });
 
 const PokemonCardSchema = new Schema<PokemonCard>({
