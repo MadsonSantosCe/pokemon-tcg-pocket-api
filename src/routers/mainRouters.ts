@@ -2,12 +2,12 @@ import { Router } from "express";
 import { upload } from "../libs/multer";
 const router = Router();
 
-const pokemonController = require("../controllers/pokemonController");
+const cardController = require("../controllers/cardController");
 
-router.post("/pokemon/cardUpload", upload.single("file"), pokemonController.cardUpload);
-router.get("/pokemon", pokemonController.getAll);
-router.get("/pokemon/:id", pokemonController.getById);
-router.put("/pokemon/:id", pokemonController.update);
-router.delete("/pokemon/:id", pokemonController.remove);
+router.post("/card/upload", upload.single("file"),  cardController.cardUpload);
+router.get("/card", cardController.getAll);
+router.get("/card/:id", cardController.getById);
+router.put("/card/:id", cardController.update);
+router.delete("/card/:id", cardController.remove);
 
 export default router;

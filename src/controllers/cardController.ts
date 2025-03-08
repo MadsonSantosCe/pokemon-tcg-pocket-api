@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Pokemon from "../models/Pokemon";
 import { CardDataAnalyzer } from "../services/cardDataService";
 import { formatJson } from "../utils/formatJson";
-import { mapJsonToPokemonCard } from "../services/pokemonService";
+import { mapJsonToPokemonCard } from "../services/cardService";
 import fs from "fs";
 
 export const getAll = async (req: Request, res: Response) => {
@@ -75,11 +75,10 @@ export const cardUpload = async (req: Request, res: Response) => {
     if (!pokemonCard) {
       return res.status(400).json({ error: "Falha ao mapear JSON para carta" });
     }
-    
+
     await pokemonCard.save();
     deleteFile(req.file.path);
     return res.json(pokemonCard);
-    
   } catch (error) {
     return res
       .status(500)

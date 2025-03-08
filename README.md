@@ -56,10 +56,10 @@ Este projeto é uma aplicação Node.js desenvolvida em TypeScript para leitura 
 │   │   ├── arquivoModelo.webp
 ├── src
 │   ├── controllers
-│   │   ├── pokemonController.ts
+│   │   ├── cardController.ts
 │   ├── services
 │   │   ├── cardDataService.ts
-│   │   ├── pokemonService.ts
+│   │   ├── cardService.ts
 │   ├── routes
 │   │   ├── mainRoutes.ts
 │   ├── models
