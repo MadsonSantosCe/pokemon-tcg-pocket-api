@@ -12,46 +12,64 @@ const energytypes = [
   "metal",
 ];
 
+interface EnergyCost {
+  [key: string]: number;
+}
+
 export const mapJsonToPokemonCard = async (jsonData: any) => {
   try {
     const data = jsonData;
-    const pokemonCard = new Pokemon({
-      name: data.name,
-      stage: data.stage,
-      evolvesFrom: data.evolvesFrom || "",
-      hp: parseInt(data.hp, 10),
-      type: data.type,
-      ability: data.ability
+    const ability =
+      data.ability && (data.ability.name || data.ability.description)
         ? {
-            name: data.ability.name,
-            description: data.ability.description,
+            name: data.ability.name || "",
+            description: data.ability.description || "",
           }
-        : null,
+        : null;
+
+    const weakness =
+      data.weakness && (data.weakness.type || data.weakness.bonus)
+        ? {
+            type: data.weakness.type || "",
+            bonus: isNaN(parseInt(data.weakness.bonus.replace("+", ""), 10))
+              ? 0
+              : parseInt(data.weakness.bonus.replace("+", ""), 10),
+          }
+        : null;
+
+    const pokemonCard = new Pokemon({
+      name: data.name || "",
+      stage: data.stage || "",
+      evolvesFrom: data.evolvesFrom || "",
+      hp: isNaN(parseInt(data.hp, 10)) ? 0 : parseInt(data.hp, 10),
+      type: data.type || "",
+      ability: ability,
       attacks: data.attacks
         ? data.attacks.map((attack: any) => ({
-            name: attack.name,
+            name: attack.name || "",
             energyCost: attack.energyCost
-              ? attack.energyCost.map((cost: any) => {
-                  let filteredCost: { [key: string]: number } = {};
-                  energytypes.forEach((type) => {
-                    if (cost[type] !== undefined && cost[type] > 0) {
-                      filteredCost[type] = cost[type];
-                    }
-                  });
-                  return filteredCost;
-                })
+              ? attack.energyCost
+                  .map((cost: EnergyCost) => {
+                    let filteredCost: EnergyCost = {};
+                    energytypes.forEach((type) => {
+                      if (cost[type] !== undefined && cost[type] > 0) {
+                        filteredCost[type] = cost[type];
+                      }
+                    });
+                    return filteredCost;
+                  })
+                  .filter((cost: EnergyCost) => Object.keys(cost).length > 0)
               : [],
-            damage: parseInt(attack.damage, 10) || 0,
+            damage: isNaN(parseInt(attack.damage, 10))
+              ? 0
+              : parseInt(attack.damage, 10),
             description: attack.description || "",
           }))
         : [],
-      weakness: data.weakness
-        ? {
-            type: data.weakness.type,
-            bonus: parseInt(data.weakness.bonus.replace("+", ""), 10),
-          }
-        : null,
-      retreatCost: parseInt(data.retreatCost, 10) || 0,
+      weakness: weakness,
+      retreatCost: isNaN(parseInt(data.retreatCost, 10))
+        ? 0
+        : parseInt(data.retreatCost, 10),
       number: data.number || "",
       exRule: data.exRule || "",
     });
@@ -59,5 +77,6 @@ export const mapJsonToPokemonCard = async (jsonData: any) => {
     return pokemonCard;
   } catch (error) {
     console.error("Erro ao criar a entidade PokemonCard:", error);
+    return null;
   }
 };

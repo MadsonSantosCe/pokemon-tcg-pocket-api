@@ -1,7 +1,8 @@
 import express, { urlencoded } from "express";
 import mainRouters from "./routers/mainRouters";
-import { connectToDatabase } from "./config/database";
+import connectToDatabase from "./config/database";
 import cors from "cors";
+import { processUploads } from "./utils/processUploads";
 
 const app = express();
 app.use(cors());

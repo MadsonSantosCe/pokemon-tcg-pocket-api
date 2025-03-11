@@ -26,7 +26,7 @@ interface Weakness {
 
 interface Ability {
   name: string;
-  description: string; // Correção aqui
+  description: string;
 }
 
 interface PokemonCard extends Document {
@@ -60,9 +60,9 @@ const EnergyCostSchema = new Schema<EnergyCost>(
 
 const AttackSchema = new Schema<Attack>(
   {
-    name: { type: String, required: true },
-    energyCost: { type: [EnergyCostSchema], required: true },
-    damage: { type: Number, required: true },
+    name: { type: String, default: "" },
+    energyCost: { type: [EnergyCostSchema], default: [] },
+    damage: { type: Number, default: 0 },
     description: { type: String, default: "" },
   },
   { _id: false }
@@ -70,30 +70,30 @@ const AttackSchema = new Schema<Attack>(
 
 const WeaknessSchema = new Schema<Weakness>(
   {
-    type: { type: String, required: true },
-    bonus: { type: Number, required: true },
+    type: { type: String, default: "" },
+    bonus: { type: Number, default: 0 },
   },
   { _id: false }
 );
 
 const AbilitySchema = new Schema<Ability>(
   {
-    name: { type: String },
-    description: { type: String },
+    name: { type: String, default: "" },
+    description: { type: String, default: "" },
   },
   { _id: false }
 );
 
 const PokemonCardSchema = new Schema<PokemonCard>({
-  name: { type: String, required: true },
-  stage: { type: String, required: true },
+  name: { type: String, default: "" },
+  stage: { type: String, default: "" },
   evolvesFrom: { type: String, default: "" },
-  hp: { type: Number, required: true },
-  type: { type: String, required: true },
+  hp: { type: Number, default: 0 },
+  type: { type: String, default: "" },
   ability: { type: AbilitySchema, default: null },
   attacks: { type: [AttackSchema], default: [] },
-  weakness: { type: WeaknessSchema, required: true },
-  retreatCost: { type: Number, default: null },
+  weakness: { type: WeaknessSchema, default: null },
+  retreatCost: { type: Number, default: 0 },
   number: { type: String, default: "" },
   exRule: { type: String, default: "" },
 });
