@@ -63,7 +63,7 @@ export const mapJsonToPokemonCard = async (jsonData: any) => {
             damage: isNaN(parseInt(attack.damage, 10))
               ? 0
               : parseInt(attack.damage, 10),
-            description: attack.description || "",
+            effect: attack.effect || "",
           }))
         : [],
       weakness: weakness,

@@ -16,7 +16,7 @@ interface Attack {
   name: string;
   energyCost: EnergyCost[];
   damage: number;
-  description: string;
+  effect: string;
 }
 
 interface Weakness {
@@ -63,7 +63,7 @@ const AttackSchema = new Schema<Attack>(
     name: { type: String, default: "" },
     energyCost: { type: [EnergyCostSchema], default: [] },
     damage: { type: Number, default: 0 },
-    description: { type: String, default: "" },
+    effect: { type: String, default: "" },
   },
   { _id: false }
 );

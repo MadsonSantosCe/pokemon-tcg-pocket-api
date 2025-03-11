@@ -39,7 +39,7 @@ export const CardDataAnalyzer = async (filename: string) => {
             }
           ],
           "damage": "Attack damage (if available)",
-          "description": "Attack description (if available)"
+          "effect": "Attack effect (if available)"
         }
       ],
       "weakness": {
