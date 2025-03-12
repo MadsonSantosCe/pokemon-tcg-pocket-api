@@ -41,6 +41,7 @@ interface PokemonCard extends Document {
   retreatCost: number;
   number: string;
   exRule: string;
+  expansion: string;
 }
 
 const EnergyCostSchema = new Schema<EnergyCost>(
@@ -96,6 +97,7 @@ const PokemonCardSchema = new Schema<PokemonCard>({
   retreatCost: { type: Number, default: 0 },
   number: { type: String, default: "" },
   exRule: { type: String, default: "" },
+  expansion: { type: String, default: "" },
 });
 
 const PokemonCardModel = model<PokemonCard>("PokemonCard", PokemonCardSchema);

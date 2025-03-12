@@ -17,7 +17,7 @@ export const CardDataAnalyzer = async (filename: string) => {
       "stage": "Evolution stage (Basic, Stage 1, Stage 2)",
       "evolvesFrom": "Previous Pokémon name, if applicable",
       "hp": "Hit Points (HP)",
-      "type": "Pokémon type (Grass, Fire, Water, etc.)",
+      "type": "Pokémon type (Grass, Fire, Water, Lightning, Psychic, Fighting, Darkness, Metal)",
       "ability": {
         "name": "Ability name, if applicable",
         "description": "Ability description, if applicable"
@@ -27,15 +27,15 @@ export const CardDataAnalyzer = async (filename: string) => {
           "name": "Attack name",
           "energyCost": [
             {
-              "colorless": amount,
-              "grass": amount,
-              "fire": amount,
-              "water": amount,
-              "lightning": amount,
-              "psychic": amount,
-              "fighting": amount,
-              "darkness": amount,
-              "metal": amount
+              "colorless": amount (color: colorless), 
+              "grass": amount (color: green), 
+              "fire": amount (color: red), 
+              "water": amount (color: blue), 
+              "lightning": amount (color: yellow), 
+              "psychic": amount (color: purple), 
+              "fighting": amount (color: brown), 
+              "darkness": amount (color: black), 
+              "metal": amount (color: silver)
             }
           ],
           "damage": "Attack damage (if available)",

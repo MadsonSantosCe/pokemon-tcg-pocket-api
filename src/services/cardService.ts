@@ -72,6 +72,7 @@ export const mapJsonToPokemonCard = async (jsonData: any) => {
         : parseInt(data.retreatCost, 10),
       number: data.number || "",
       exRule: data.exRule || "",
+      expansion: "Genetic Apex",
     });
 
     return pokemonCard;

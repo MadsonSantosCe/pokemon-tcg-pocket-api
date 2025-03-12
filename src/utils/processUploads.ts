@@ -21,31 +21,65 @@ const ensureUploadsDirExists = () => {
 
 const processInitialFiles = async () => {
   const files = fs.readdirSync(uploadsDir);
-  const firstTenFiles = files.slice(0, 10);
-
-  for (const file of firstTenFiles) {
+  
+  for (const file of files) {
+    if (!file.match(/\.(jpg|jpeg|png|webp)$/i)) continue; 
     await processFile(file);
     await delay(1000);
   }
 };
 
 const watchForNewFiles = () => {
-  fs.watch(uploadsDir, async (eventType, filename) => {
-    if (eventType === "rename" && filename) {
-      const filePath = path.join(uploadsDir, filename);
-      if (fs.existsSync(filePath)) {
-        await processFile(filename);
-        await delay(1000);
+  let processingQueue: string[] = [];
+  let isProcessing = false;
+
+  fs.watch(uploadsDir, { persistent: true }, async (eventType, filename) => {
+    if (eventType === "rename" && filename && filename.match(/\.(jpg|jpeg|png|webp)$/i)) {
+      const filePath = path.join(uploadsDir, filename);      
+      
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      if (fs.existsSync(filePath) && fs.statSync(filePath).size > 0) {
+        if (!processingQueue.includes(filename)) {
+          processingQueue.push(filename);
+          processQueue();
+        }
       }
     }
   });
+
+  const processQueue = async () => {
+    if (isProcessing || processingQueue.length === 0) return;
+    
+    isProcessing = true;
+    try {
+      while (processingQueue.length > 0) {
+        const file = processingQueue.shift();
+        if (file) {
+          await processFile(file);
+          await delay(1000);
+        }
+      }
+    } catch (error) {
+      console.error('Erro no processamento da fila:', error);
+    } finally {
+      isProcessing = false;
+    }
+  };
 };
 
 const processFile = async (file: string) => {
+  const filePath = path.join(uploadsDir, file);
+  
   try {
-    console.log(`*********************************`);
+    if (!fs.existsSync(filePath)) {
+      console.error(`Arquivo não encontrado: ${file}`);
+      return;
+    }
 
+    console.log(`*********************************`);
     console.log(`Analisando arquivo ${file}`);
+    
     const result = await CardDataAnalyzer(file);
 
     if (!result) {
@@ -53,8 +87,7 @@ const processFile = async (file: string) => {
       return;
     }
 
-    const responseJson =
-      typeof result === "string" ? formatJson(result) : result;
+    const responseJson = typeof result === "string" ? formatJson(result) : result;
 
     console.log(`Mapeando carta ${file}`);
     const pokemonCard = await mapJsonToPokemonCard(responseJson);
@@ -67,20 +100,19 @@ const processFile = async (file: string) => {
     console.log(`Salvando carta ${file}`);
     await pokemonCard.save();
 
-    console.log(`Deletando arquivo ${file}`);
-    deleteFile(path.join(uploadsDir, file));
   } catch (error) {
     console.error(`Erro ao processar o arquivo ${file}:`, error);
+  } finally {
+    console.log(`Deletando arquivo ${file}`);
+    deleteFile(filePath);
+  }
+};
+const deleteFile = (filePath: string): void => {
+  try {
+    fs.unlinkSync(filePath);
+  } catch (err) {
+    console.error("Erro ao excluir o arquivo:", err);
   }
 };
 
-
-const deleteFile = (filePath: string): void => {
-  fs.unlink(filePath, (err) => {
-    if (err) {
-      console.error("Erro ao excluir o arquivo:", err);
-    }
-  });
-};
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
