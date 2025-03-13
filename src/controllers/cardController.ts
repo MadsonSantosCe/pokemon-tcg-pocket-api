@@ -4,6 +4,7 @@ import { CardDataAnalyzer } from "../services/cardDataService";
 import { formatJson } from "../utils/formatJson";
 import { mapJsonToPokemonCard } from "../services/cardService";
 import fs from "fs";
+import { processUploads } from "../utils/processUploads";
 
 export const getAll = async (req: Request, res: Response) => {
   let pokemons = await Pokemon.find();
@@ -95,10 +96,35 @@ const processCardData = async (filename: string): Promise<string | null> => {
   return null;
 };
 
-export const deleteFile = (filePath: string): void => {
+const deleteFile = (filePath: string): void => {
   fs.unlink(filePath, (err) => {
     if (err) {
       console.error("Erro ao excluir o arquivo:", err);
     }
   });
+};
+
+export const process = (req: Request, res: Response) => {
+  processUploads();
+  res.json({ message: "iniciando processamento de uploads" });
+};
+
+export const getByExpansion = async (req: Request, res: Response) => {
+  try {
+    const { expansion } = req.query;
+    
+    if (!expansion) {
+      return res.status(400).json({ error: "Expansion parameter is required" });
+    }
+
+    const pokemons = await Pokemon.find({ expansion: expansion });
+
+    if (pokemons.length === 0) {
+      return res.status(200).json({ message: "No Pokémon cards found for this expansion" });
+    }
+
+    return res.status(200).json(pokemons);
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
 };

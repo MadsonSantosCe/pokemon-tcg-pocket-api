@@ -10,14 +10,14 @@ export const CardDataAnalyzer = async (filename: string) => {
   try {
     const filePath = path.join(__dirname, "public", "uploads", filename);
     const image = fs.readFileSync(filePath);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const prompt = `Detect and extract all relevant information from a Pokémon card in the provided image. The response should be structured in the following JSON format: {
       "name": "Pokémon name",
       "stage": "Evolution stage (Basic, Stage 1, Stage 2)",
       "evolvesFrom": "Previous Pokémon name, if applicable",
       "hp": "Hit Points (HP)",
-      "type": "Pokémon type (Grass, Fire, Water, Lightning, Psychic, Fighting, Darkness, Metal)",
+      "type": "Pokémon type (Grass, Fire, Water, Lightning, Psychic, Fighting, Darkness, Metal, Dragon)",
       "ability": {
         "name": "Ability name, if applicable",
         "description": "Ability description, if applicable"
